@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.4.19;
 
 //sol Wallet
 // Multi-sig, daily-limited account proxy/wallet.
