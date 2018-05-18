@@ -303,6 +303,7 @@ contract multisig {
     function confirm(bytes32 _h) returns (bool);
 }
 
+
 // usage:
 // bytes32 h = Wallet(w).from(oneOwner).transact(to, value, data);
 // Wallet(w).from(anotherOwner).confirm(h);
