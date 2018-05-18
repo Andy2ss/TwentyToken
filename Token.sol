@@ -2,9 +2,9 @@ pragma solidity ^0.4.19;
 
 contract TwentyToken {
     
-    uint public constant _totalSupply = 1000000;
+    uint public constant _totalSupply = 100000;
     
-    string public constant symbol = "TWT";
+    string public constant symbol = "";
     string public constant name = "Twenty Token";
     uint8 public constant decimals = 3;
     
