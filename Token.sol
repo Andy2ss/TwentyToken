@@ -4,7 +4,7 @@ contract TwentyToken {
     
     uint public constant _totalSupply = 100000;
     
-    string public constant symbol = "";
+    string public constant symbol = "TWEN";
     string public constant name = "Twenty Token";
     uint8 public constant decimals = 3;
     
