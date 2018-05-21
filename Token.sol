@@ -23,7 +23,7 @@ contract TwentyToken {
 
     uint public constant _totalSupply = 100000;
     
-    string public constant symbol = "TWEN";
+    string public constant symbol = "TWENTY";
     string public constant name = "Twenty Token";
     uint8 public constant decimals = 3;
     
@@ -45,7 +45,7 @@ contract TwentyToken {
             );
         balances[msg.sender] -= _value;
         balances[_to] += _value;
-        Transfer(msg.sender, _to, _value);
+        emit Transfer(msg.sender, _to, _value);
         return true;
     }
     
@@ -58,17 +58,17 @@ contract TwentyToken {
         balances[_from] -= _value;
         balances[_to] += _value;
         allowed[_from][msg.sender] -= _value;
-        Transfer(_from, _to, _value);
+        emit Transfer(_from, _to, _value);
         return true;
     }
     
     function approve(address _spender, uint256 _value) public returns (bool success) {
         allowed[msg.sender][_spender] -= _value;
-        Approval(msg.sender, _spender, _value);
+        emit Approval(msg.sender, _spender, _value);
         return true;
     }
     
-    function allowance(address _owner, address _spender) public constant returns (uint256 remaining) {
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
         return allowed[_owner][_spender];
     }
     
