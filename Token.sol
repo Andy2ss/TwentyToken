@@ -30,11 +30,11 @@ contract TwentyToken {
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed; 
     
-    function TwentyToken() public {
+    constructor TwentyToken() public {
         balances[msg.sender] = _totalSupply;
     }
     
-    function balanceOf(address _owner) public constant returns (uint256 balance) {
+    function balanceOf(address _owner) public view returns (uint256 balance) {
         return balances[_owner];
     }
     
