@@ -9,8 +9,8 @@ contract DutchAuction {
      * Auction for the TWENTY Token.
      *
      * Terminology:
-     * 1 token unit = Wei
-     * 1 token = TWENTY = Wei * token_multiplier
+     * 1 token unit = Wen
+     * 1 token = TWENTY = Wen * token_multiplier
      * token_multiplier set from token's number of decimals (i.e. 8 ** decimals)
      */
 
@@ -32,7 +32,7 @@ contract DutchAuction {
 
     // Price decay function parameters to be changed depending on the desired outcome
 
-    // Starting price in WEI; e.g. 2 * 10 ** 18
+    // Starting price in Wen; e.g. 2 * 10 ** 18
     uint public price_start;
 
     // Divisor constant; e.g. 524880000
@@ -54,10 +54,10 @@ contract DutchAuction {
 
     uint public token_multiplier;
 
-    // Total number of Rei (TWENTY * token_multiplier) that will be auctioned
+    // Total number of Wei (TWENTY * token_multiplier) that will be auctioned
     uint public num_tokens_auctioned;
 
-    // Wei per TWENTY (Rei * token_multiplier)
+    // Wei per TWENTY (Wei * token_multiplier)
     uint public final_price;
 
     // Bidder address => bid value
@@ -123,7 +123,7 @@ contract DutchAuction {
     /// @param _price_start High price in WEI at which the auction starts.
     /// @param _price_constant Auction price divisor constant.
     /// @param _price_exponent Auction price divisor exponent.
-    function DutchAuction(
+    constructor(DutchAuction)
         address _wallet_address,
         address _whitelister_address,
         uint _price_start,
@@ -154,7 +154,7 @@ contract DutchAuction {
         require(_token_address != 0x0);
         token = EwaToken(_token_address);
 
-        // Get number of Rei (TWENTY * token_multiplier) to be auctioned from token auction balance
+        // Get number of Wei (TWENTY * token_multiplier) to be auctioned from token auction balance
         num_tokens_auctioned = token.balanceOf(address(this));
 
         // Set the number of the token multiplier for its decimals
@@ -221,8 +221,8 @@ contract DutchAuction {
         uint missing_funds = missingFundsToEndAuction();
         require(missing_funds == 0);
 
-        // Calculate the final price = WEI / TWENTY = WEI / (Rei / token_multiplier)
-        // Reminder: num_tokens_auctioned is the number of Rei (TWENTY * token_multiplier) that are auctioned
+        // Calculate the final price = WEI / TWENTY = WEI / (Wei / token_multiplier)
+        // Reminder: num_tokens_auctioned is the number of Wei (TWENTY * token_multiplier) that are auctioned
         final_price = token_multiplier * received_wei / num_tokens_auctioned;
 
         end_time = block;
@@ -289,7 +289,7 @@ contract DutchAuction {
             return false;
         }
 
-        // Number of Rei = bid_wei / Rei = bid_wei / (wei_per_EWA * token_multiplier)
+        // Number of Wei = bid_wei / Wei = bid_wei / (wei_per_EWA * token_multiplier)
         uint num = (token_multiplier * bids[receiver_address]) / final_price;
 
         // Due to final_price floor rounding, the number of assigned tokens may be higher
@@ -326,7 +326,7 @@ contract DutchAuction {
     /// calling this function. Returns `0` if auction has ended.
     /// Returns `price_start` before auction has started.
     /// @dev Calculates the current TWENTY token price in WEI.
-    /// @return Returns WEI per TWENTY (token_multiplier * Rei).
+    /// @return Returns WEI per TWENTY (token_multiplier * Wei).
     function price() public view returns (uint) {
         if (stage == Stages.AuctionEnded ||
             stage == Stages.TokensDistributed) {
@@ -341,7 +341,7 @@ contract DutchAuction {
     /// @return Returns the missing funds amount in WEI.
     function missingFundsToEndAuction() view public returns (uint) {
 
-        // num_tokens_auctioned = total number of Rei (TWENTY * token_multiplier) that is auctioned
+        // num_tokens_auctioned = total number of Wei (TWENTY * token_multiplier) that is auctioned
         uint required_wei_at_price = num_tokens_auctioned * price() / token_multiplier;
         if (required_wei_at_price <= received_wei) {
             return 0;
