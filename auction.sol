@@ -6,11 +6,11 @@ import "./Token.sol";
 /// The auction ends if a fixed number of tokens was sold.
 contract DutchAuction {
     /*
-     * Auction for the EWA Token.
+     * Auction for the TWENTY Token.
      *
      * Terminology:
      * 1 token unit = Wei
-     * 1 token = EWA = Wei * token_multiplier
+     * 1 token = TWENTY = Wei * token_multiplier
      * token_multiplier set from token's number of decimals (i.e. 10 ** decimals)
      */
 
@@ -25,7 +25,7 @@ contract DutchAuction {
      * Storage
      */
 
-    EwaToken public token;
+    TwentyToken public token;
     address public owner_address;
     address public wallet_address;
     address public whitelister_address;
@@ -54,10 +54,10 @@ contract DutchAuction {
 
     uint public token_multiplier;
 
-    // Total number of Rei (EWA * token_multiplier) that will be auctioned
+    // Total number of Rei (TWENTY * token_multiplier) that will be auctioned
     uint public num_tokens_auctioned;
 
-    // Wei per EWA (Rei * token_multiplier)
+    // Wei per TWENTY (Rei * token_multiplier)
     uint public final_price;
 
     // Bidder address => bid value
@@ -154,7 +154,7 @@ contract DutchAuction {
         require(_token_address != 0x0);
         token = EwaToken(_token_address);
 
-        // Get number of Rei (EWA * token_multiplier) to be auctioned from token auction balance
+        // Get number of Rei (TWENTY * token_multiplier) to be auctioned from token auction balance
         num_tokens_auctioned = token.balanceOf(address(this));
 
         // Set the number of the token multiplier for its decimals
@@ -212,17 +212,17 @@ contract DutchAuction {
         emit AuctionStarted(start_time, start_block);
     }
 
-    /// @notice Finalize the auction - sets the final EWA token price and changes the auction
+    /// @notice Finalize the auction - sets the final TWENTY token price and changes the auction
     /// stage after no bids are allowed anymore.
-    /// @dev Finalize auction and set the final EWA token price.
+    /// @dev Finalize auction and set the final TWENTY token price.
     function finalizeAuction() public atStage(Stages.AuctionStarted)
     {
         // Missing funds should be 0 at this point
         uint missing_funds = missingFundsToEndAuction();
         require(missing_funds == 0);
 
-        // Calculate the final price = WEI / EWA = WEI / (Rei / token_multiplier)
-        // Reminder: num_tokens_auctioned is the number of Rei (EWA * token_multiplier) that are auctioned
+        // Calculate the final price = WEI / TWENTY = WEI / (Rei / token_multiplier)
+        // Reminder: num_tokens_auctioned is the number of Rei (TWENTY * token_multiplier) that are auctioned
         final_price = token_multiplier * received_wei / num_tokens_auctioned;
 
         end_time = block;
@@ -322,11 +322,11 @@ contract DutchAuction {
         return true;
     }
 
-    /// @notice Get the EWA price in WEI during the auction, at the time of
+    /// @notice Get the TWENTY price in WEI during the auction, at the time of
     /// calling this function. Returns `0` if auction has ended.
     /// Returns `price_start` before auction has started.
-    /// @dev Calculates the current EWA token price in WEI.
-    /// @return Returns WEI per EWA (token_multiplier * Rei).
+    /// @dev Calculates the current TWENTY token price in WEI.
+    /// @return Returns WEI per TWENTY (token_multiplier * Rei).
     function price() public view returns (uint) {
         if (stage == Stages.AuctionEnded ||
             stage == Stages.TokensDistributed) {
@@ -336,12 +336,12 @@ contract DutchAuction {
     }
 
     /// @notice Get the missing funds needed to end the auction,
-    /// calculated at the current EWA price in WEI.
-    /// @dev The missing funds amount necessary to end the auction at the current EWA price in WEI.
+    /// calculated at the current TWENTY price in WEI.
+    /// @dev The missing funds amount necessary to end the auction at the current TWENTY price in WEI.
     /// @return Returns the missing funds amount in WEI.
     function missingFundsToEndAuction() view public returns (uint) {
 
-        // num_tokens_auctioned = total number of Rei (EWA * token_multiplier) that is auctioned
+        // num_tokens_auctioned = total number of Rei (TWENTY * token_multiplier) that is auctioned
         uint required_wei_at_price = num_tokens_auctioned * price() / token_multiplier;
         if (required_wei_at_price <= received_wei) {
             return 0;
@@ -355,14 +355,14 @@ contract DutchAuction {
      *  Private functions
      */
 
-    /// @dev Calculates the token price (WEI / EWA) at the current timestamp
+    /// @dev Calculates the token price (WEI / TWENTY) at the current timestamp
     /// during the auction; elapsed time = 0 before auction starts.
     /// Based on the provided parameters, the price does not change in the first
     /// `price_constant^(1/price_exponent)` seconds due to rounding.
     /// Rounding in `decay_rate` also produces values that increase instead of decrease
     /// in the beginning; these spikes decrease over time and are noticeable
     /// only in first hours. This should be calculated before usage.
-    /// @return Returns the token price - Wei per EWA.
+    /// @return Returns the token price - Wei per TWENTY.
     function calcTokenPrice() view private returns (uint) {
         uint elapsed;
         if (stage == Stages.AuctionStarted) {
