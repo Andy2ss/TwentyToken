@@ -75,7 +75,7 @@ contract multiowned {
         if (pending.ownersDone & ownerIndexBit > 0) {
             pending.yetNeeded++;
             pending.ownersDone -= ownerIndexBit;
-            Revoke(msg.sender, _operation);
+            emit Revoke(msg.sender, _operation);
         }
     }
 
@@ -89,7 +89,7 @@ contract multiowned {
         m_owners[ownerIndex] = uint(_to);
         m_ownerIndex[uint(_from)] = 0;
         m_ownerIndex[uint(_to)] = ownerIndex;
-        OwnerChanged(_from, _to);
+        emit OwnerChanged(_from, _to);
     }
 
     function addOwner(address _owner) onlymanyowners(sha3(msg.data, block.number)) external {
@@ -103,7 +103,7 @@ contract multiowned {
         m_numOwners++;
         m_owners[m_numOwners] = uint(_owner);
         m_ownerIndex[uint(_owner)] = m_numOwners;
-        OwnerAdded(_owner);
+        emit OwnerAdded(_owner);
     }
 
     function removeOwner(address _owner) onlymanyowners(sha3(msg.data, block.number)) external {
@@ -115,21 +115,21 @@ contract multiowned {
         m_ownerIndex[uint(_owner)] = 0;
         clearPending();
         reorganizeOwners(); //make sure m_numOwner is equal to the number of owners and always points to the optimal free slot
-        OwnerRemoved(_owner);
+        emit OwnerRemoved(_owner);
     }
 
     function changeRequirement(uint _newRequired) onlymanyowners(sha3(msg.data, block.number)) external {
         if (_newRequired > m_numOwners) return;
         m_required = _newRequired;
         clearPending();
-        RequirementChanged(_newRequired);
+        emit RequirementChanged(_newRequired);
     }
 
-    function isOwner(address _addr) returns (bool) {
+    function isOwner(address _addr) public returns (bool) {
         return m_ownerIndex[uint(_addr)] > 0;
     }
 
-    function hasConfirmed(bytes32 _operation, address _owner) constant returns (bool) {
+    function hasConfirmed(bytes32 _operation, address _owner) constant public returns (bool) {
         var pending = m_pending[_operation];
         uint ownerIndex = m_ownerIndex[uint(_owner)];
 
