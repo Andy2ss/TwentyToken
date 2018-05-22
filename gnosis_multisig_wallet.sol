@@ -45,13 +45,13 @@ contract MultiSigWallet {
      */
     modifier onlyWallet() {
         if (msg.sender != address(this))
-            throw;
+            revert();
         _;
     }
 
     modifier ownerDoesNotExist(address owner) {
         if (isOwner[owner])
-            throw;
+            revert();
         _;
     }
 
