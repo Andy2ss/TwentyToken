@@ -1,14 +1,6 @@
 pragma solidity ^0.4.19;
 
 contract TwentyToken {
-    
-     /*
-     * Implements ERC 20 standard.
-     * https://github.com/ethereum/EIPs/issues/20
-     *
-     *  Added support for the ERC 223 "tokenFallback" method in a "transfer" function with a payload.
-     *  https://github.com/ethereum/EIPs/issues/223
-     */
 
     uint public constant _totalSupply = 100000;
     
@@ -19,7 +11,7 @@ contract TwentyToken {
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed; 
     
-    constructor TwentyToken() public {
+    constructor(TwentyToken) public {
         balances[msg.sender] = _totalSupply;
     }
     
