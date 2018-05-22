@@ -129,7 +129,7 @@ contract multiowned {
         return m_ownerIndex[uint(_addr)] > 0;
     }
 
-    function hasConfirmed(bytes32 _operation, address _owner) constant public returns (bool) {
+    function hasConfirmed(bytes32 _operation, address _owner) view public returns (bool) {
         var pending = m_pending[_operation];
         uint ownerIndex = m_ownerIndex[uint(_owner)];
 
@@ -167,7 +167,7 @@ contract multiowned {
         uint ownerIndexBit = 2**ownerIndex;
         // make sure we (the message sender) haven't confirmed this operation previously.
         if (pending.ownersDone & ownerIndexBit == 0) {
-            Confirmation(msg.sender, _operation);
+            emit Confirmation(msg.sender, _operation);
             // ok - check if count is enough to go ahead.
             if (pending.yetNeeded <= 1) {
                 // enough confirmations: reset and run interior.
@@ -203,7 +203,7 @@ contract multiowned {
         uint length = m_pendingIndex.length;
         for (uint i = 0; i < length; ++i)
             if (m_pendingIndex[i] != 0)
-                delete m_pending[m_pendingIndex[i]];
+        delete m_pending[m_pendingIndex[i]];
         delete m_pendingIndex;
     }
 
@@ -240,7 +240,7 @@ contract daylimit is multiowned {
     // METHODS
 
     // constructor - stores initial daily limit and records the present day's index.
-    function daylimit(uint _limit) {
+    constructor(daylimit(uint _limit) public {
         m_dailyLimit = _limit;
         m_lastDay = today();
     }
