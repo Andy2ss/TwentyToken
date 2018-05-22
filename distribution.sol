@@ -1,6 +1,6 @@
 pragma solidity ^0.4.20;
 
-import './auction.sol';
+import "./auction.sol";
 
 /// @title Distributor contract - distribution of tokens after an auction has ended.
 contract Distributor {
