@@ -11,11 +11,11 @@ contract DutchAuction {
      * Terminology:
      * 1 token unit = Wei
      * 1 token = TWENTY = Wei * token_multiplier
-     * token_multiplier set from token's number of decimals (i.e. 10 ** decimals)
+     * token_multiplier set from token's number of decimals (i.e. 8 ** decimals)
      */
 
-    // Wait 14 days after the end of the auction, before anyone can claim tokens
-    uint constant public token_claim_waiting_period = 14 days;
+    // Wait 28 days after the end of the auction, before anyone can claim tokens
+    uint constant public token_claim_waiting_period = 28 days;
 
     // Bid value over which the address has to be whitelisted
     // At deployment moment, less than 1k$
