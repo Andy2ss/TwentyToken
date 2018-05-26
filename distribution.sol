@@ -25,7 +25,7 @@ contract Distributor {
         require(_auction_address != 0x0);
 
         auction = DutchAuction(_auction_address);
-        Deployed();
+        emit Deployed();
     }
 
     /// @notice Claim tokens in behalf of the following token owners: `addresses`.
