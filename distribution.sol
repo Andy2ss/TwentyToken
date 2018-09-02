@@ -28,7 +28,7 @@ contract Distributor {
         emit Deployed();
     }
 
-    /// @notice Claim tokens in behalf of the following token owners: `addresses`.
+    /// @notice Claim tokens in behalf of the following token owners: `address`.
     /// @dev Function that is called with an array of addresses for claiming tokens in their behalf.
     /// @param addresses Addresses of auction bidders that will be assigned tokens.
     function distribute(address[] addresses) public {
